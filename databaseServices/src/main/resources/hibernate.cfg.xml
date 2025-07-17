@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC     "-//Hibernate/Hibernate Configuration DTD//EN"     "http://hibernate.sourceforge.net/hibernate-configuration-5.0.dtd">
+<hibernate-configuration>
+	   <session-factory>
+		<mapping class="com.exchangerpoint.databaseservices.entity.AccessControl" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.AdminParam" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.BankAccount" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.BankTransfer" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.BuysellOrder" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.CryptoAccount" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.CryptoCurrency" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.CryptoTrade" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.CryptoTransfer" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.DigitalAccount" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.DigitalTransfer" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.ExchangeOrder" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.ExchangeRate" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.FiatCurrency" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.MainAccount" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.PaymentMethod" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.RazorpayAccount" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.CardAccount" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.SupportRequest" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.TempRecord" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.UserAccount" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.UserAddress" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.UserLimit" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.UserPayment" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.UserVerification" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.UserWallet" />
+		<mapping class="com.exchangerpoint.databaseservices.entity.UserOperation" />
+       </session-factory>
+</hibernate-configuration>

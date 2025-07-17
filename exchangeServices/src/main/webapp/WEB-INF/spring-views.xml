@@ -1,0 +1,20 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<!-- Redirect view -->
+	<bean id="contactSuccessRedirect"
+	   class="org.springframework.web.servlet.view.RedirectView">
+       <property name="url" value="contactsuccess.htm" />
+    </bean>
+	 <bean id="supportSuccessRedirect"
+	   class="org.springframework.web.servlet.view.RedirectView">
+       <property name="url" value="supportsuccess.htm" />
+    </bean>
+     <bean id="registerSuccessRedirect"
+	   class="org.springframework.web.servlet.view.RedirectView">
+       <property name="url" value="registersuccess.htm" />
+    </bean>
+
+  </beans>

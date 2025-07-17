@@ -1,0 +1,61 @@
+label.lablespm {
+	width: 20% !important;
+	padding: 10px 5px;
+	border: 2px #64CA66 solid;
+	border-radius: 5px;
+	background-color: #CBF5CC;
+	margin-left: 0 !important;
+}
+
+label.lablespm input[type="radio"] {
+	margin: 10px 0 !important;
+	width: 10px !important;
+}
+
+img.pm {
+	width: 68%;
+}
+
+label.lblBT {
+	border: 2px #1E9F20 solid;
+	background-color: #41D045;
+}
+
+label.radio-inline.lablespm.lblBT:hover {
+	background-color: #1E9F20;
+	box-shadow: -1px 1px 4px;
+	border-radius: 5px;
+}
+
+label.lblWU {
+	border: 2px #F9C202 solid;
+	background-color: #F9E602;
+}
+
+label.radio-inline.lablespm.lblWU:hover {
+	background-color: #F9C202 !important;
+	box-shadow: -1px 1px 4px;
+	border-radius: 5px;
+}
+
+label.lblMG {
+	border: 2px #D7441B solid;
+	background-color: #F3DCD5;
+}
+
+label.radio-inline.lablespm.lblMG:hover {
+	background-color: #D7441B;
+	box-shadow: -1px 1px 4px;
+	border-radius: 5px;
+}
+
+label.lblCP {
+	border: 2px #5083DD solid;
+	background-color: #A1BEF1;
+}
+
+label.radio-inline.lablespm.lblCP:hover {
+	background-color: #5083DD;
+	box-shadow: -1px 1px 4px;
+	border-radius: 5px;
+}

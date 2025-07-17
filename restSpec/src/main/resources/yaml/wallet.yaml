@@ -1,0 +1,603 @@
+swagger: '2.0'
+info:
+  description: ExchangerPoint Crypto Exchange Plateform - API endpoint Specification
+  version: "1.0.0"
+  title: "ExchangerPoint"
+  termsOfService: "http://exchangerpoint.com/terms/"
+  contact:
+    email: "support@exchangerpoint.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "exchangerpoint.com"
+basePath: "/api/v1"
+paths:
+  /wallets: 
+    get:
+      summary: Get list of wallet registered in ExchangerPoint platform.
+      description: Gets all wallets in the system.
+      operationId: getWallets
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+      responses:
+        '200':
+          description: List of wallets
+          schema:
+            $ref: '#/definitions/WalletsResponse'
+        '400':
+          description: |
+            ** Error codes: **
+            * 1000 - Invalid login/expired session
+            * 1006 - User not logged in
+            * 1020 - Session timed out
+            * 2021 - User must be admin user
+            * 4000 - Bad request
+            * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError'
+  /wallets/:
+    get:
+       tags:
+        - wallet
+       summary: Get wallet from user profile.
+       description: Get registered user wallet from system with given username and currency.
+       operationId: getWalletCurrency
+       consumes:
+        - application/json
+       parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - in: body
+          name: getWalletRequest
+          description: GetWalletRequest - wallet details which need to be fetched.
+          required: true
+          schema:
+            $ref: '#/definitions/WalletDetails'        
+       responses:
+        '200':
+          description: Wallet Details
+          schema:
+            $ref: '#/definitions/WalletResponse'
+        '400':
+          description: |
+                ** Error codes: **
+                * 1000 - Invalid login/expired session
+                * 1006 - User not logged in
+                * 1020 - Session timed out
+                * 2001 - No username supplied
+                * 2101 - Wallet does not exist
+                * 2102 - No currency supplied
+                * 4000 - Bad request
+                * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError'            
+  /wallets/{userName}:
+    get:
+       tags:
+        - wallet
+       summary: Get all wallets from user profile.
+       description: Get registered user all wallets from system with given username.
+       operationId: getWallet
+       produces:
+        - application/json
+       parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - name: userName
+          required: true
+          type: string
+          in: path
+          description: User's unique id 
+          
+       responses:
+        '200':
+          description: User object
+          schema:
+            $ref: '#/definitions/WalletsResponse'
+        '400':
+          description: |
+                ** Error codes: **
+                * 1000 - Invalid login/expired session
+                * 1006 - User not logged in
+                * 1020 - Session timed out
+                * 4000 - Bad request
+                * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError'
+            
+  /wallets/add/:          
+    post:
+       tags:
+         - wallet
+       summary: Add new wallet in the user profile
+       description: Add the new wallet foruser in the system.
+       operationId: createWallet
+       consumes:
+        - application/json
+       parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - in: body
+          name: addWalletRequest
+          description: AddWalletRequest - wallet details which need to be added.
+          required: true
+          schema:
+            $ref: '#/definitions/WalletDetails'
+       responses:
+        '201':
+          description: Created
+          headers:
+            Location:
+              type: string
+        '400':
+          description: |
+            ** Error codes: **
+            * 1000 - Invalid login/expired session
+            * 1006 - User not logged in
+            * 1020 - Session timed out
+            * 2001 - No username supplied
+            * 2101 - Wallet does not exist
+            * 2102 - No currency supplied
+            * 4000 - Bad request
+            * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError'
+    
+              
+  /wallets/update/:  
+    post:
+      tags:
+        - wallet
+      summary: Update existing wallet details in user profile
+      description: Updates the registerd user wallet with new details.
+      operationId: updateWallet
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - in: body
+          name: updateWalletRequest
+          description: UpdateWalletRequest - Wallet details which need to be updated.
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateWalletRequest'
+      responses:
+        '204':
+          description: No Content
+          headers:
+            Location:
+              type: string
+        '400':
+          description: |
+            ** Error codes: **
+            * 1000 - Invalid login/expired session
+            * 1006 - User not logged in
+            * 1020 - Session timed out
+            * 2001 - No username supplied
+            * 2101 - Wallet does not exist
+            * 2102 - No currency supplied
+            * 4003 - Access Denied
+            * 4000 - Bad request
+            * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError'
+  /wallets/delete/:           
+    delete:
+       tags:
+         - wallet
+       summary: Delete wallet from user profile
+       description: Deletes the registerd user wallet from the system with username and curency.This will soft delete the user wallet with changing wallet state to 'DELETED'
+       operationId: deleteWallet
+       parameters:
+         - $ref: '#/parameters/acceptParam'
+         - $ref: '#/parameters/userAgentParam'
+         - $ref: '#/parameters/acceptEncodingParam'
+         - $ref: '#/parameters/cookieParam'
+         - $ref: '#/parameters/xRequestIdParam'
+         - in: body
+           name: deleteWalletRequest
+           description: DeleteWalletRequest - wallet details which need to be deleted.
+           required: true
+           schema:
+            $ref: '#/definitions/WalletDetails'
+       responses:
+              '204':
+                description: No Content
+                headers:
+                  Location:
+                    type: string
+              '400':
+                description: |
+                  ** Error codes: **
+                  * 1000 - Invalid login/expired session
+                  * 1006 - User not logged in
+                  * 1020 - Session timed out
+                  * 2001 - No username supplied
+                  * 2101 - Wallet does not exist
+                  * 2102 - No currency supplied
+                  * 4000 - Bad request
+                  * 5000 - Internal Server Error
+                schema:
+                  $ref: '#/definitions/RestError'
+              '500':
+                description: Server error
+                schema:
+                  $ref: '#/definitions/RestError'
+            
+  /wallets/bankaccount/{userName}:
+    get:
+       tags:
+        - bank account
+       summary: Get bank accounts from  user profile.
+       description: Get registered user all bank accounts from system with given username.
+       operationId: getBankAccounts
+       produces:
+        - application/json
+       parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - name: userName
+          required: true
+          type: string
+          in: path
+          description: User's unique id
+          
+       responses:
+        '200':
+          description: User object
+          schema:
+            $ref: '#/definitions/BankAccountsResponse'
+        '400':
+          description: |
+                ** Error codes: **
+                * 1000 - Invalid login/expired session
+                * 1006 - User not logged in
+                * 1020 - Session timed out
+                * 4000 - Bad request
+                * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError'            
+            
+  /wallets/bankaccount/add/:  
+    post:
+      tags:
+        - bank account
+      summary: add new bank detais in user profile
+      description: add new bank details in user profile
+      operationId: addBankAccount
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - in: body
+          name: addBanktRequest
+          description: addBanktAccountRequest - bank details which need to be added.
+          required: true
+          schema:
+            $ref: '#/definitions/AddBankAccountRequest'
+      responses:
+        '201':
+          description: Created
+          headers:
+            Location:
+              type: string
+        '400':
+          description: |
+            ** Error codes: **
+            * 1000 - Invalid login/expired session
+            * 1006 - User not logged in
+            * 1020 - Session timed out
+            * 2001 - No username supplied
+            * 2103 - No bank account number supplied
+            * 2104 - No ifsc code supplied
+            * 2105 - ifsc code is wrong
+            * 2107 - Bank account already exist
+            * 4003 - Access Denied
+            * 4000 - Bad request
+            * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError'
+  /wallets/bankaccount/update/:  
+    post:
+      tags:
+        - bank account
+      summary: update existing bank detais in user profile
+      description: update existing bank details in user profile
+      operationId: updateBankAccount
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - in: body
+          name: updateBankRequest
+          description: UpdateBankAccountRequest - bank details which need to be update.
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateBankAccountRequest'
+      responses:
+        '204':
+          description: No Content
+          headers:
+            Location:
+              type: string
+        '400':
+          description: |
+            ** Error codes: **
+            * 1000 - Invalid login/expired session
+            * 1006 - User not logged in
+            * 1020 - Session timed out
+            * 2001 - No username supplied
+            * 2103 - No bank account number supplied
+            * 2104 - No ifsc code supplied
+            * 2105 - ifsc code is wrong
+            * 2107 - Bank account already exist
+            * 4003 - Access Denied
+            * 4000 - Bad request
+            * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError' 
+  /wallets/bankaccount/delete/:          
+    delete:
+       tags:
+         - bank account
+       summary: Delete bank details from user profile 
+       description: Deletes the registerd user bank details from the system with username and bank account number .This will soft delete the user wallet with changing wallet state to 'DELETED'
+       operationId: deleteBankAccount
+       parameters:
+         - $ref: '#/parameters/acceptParam'
+         - $ref: '#/parameters/userAgentParam'
+         - $ref: '#/parameters/acceptEncodingParam'
+         - $ref: '#/parameters/cookieParam'
+         - $ref: '#/parameters/xRequestIdParam'
+         - in: body
+           name: deleteBankRequest
+           description: DeleteBankAccountRequest - bank details which need to be deleted.
+           required: true
+           schema:
+            $ref: '#/definitions/DeleteBankAccountRequest'
+       responses:
+              '204':
+                description: No Content
+                headers:
+                  Location:
+                    type: string
+              '400':
+                description: |
+                  ** Error codes: **
+                  * 1000 - Invalid login/expired session
+                  * 1006 - User not logged in
+                  * 1020 - Session timed out
+                  * 2001 - No username supplied
+                  * 2103 - No bank account number supplied
+                  * 2106 - Bank account does not exist
+                  * 4000 - Bad request
+                  * 5000 - Internal Server Error
+                schema:
+                  $ref: '#/definitions/RestError'
+              '500':
+                description: Server error
+                schema:
+                  $ref: '#/definitions/RestError'            
+     
+parameters:
+  acceptParam:
+   name: Accept
+   in: header
+   required: true
+   type: string
+  userAgentParam:
+   name: User-Agent
+   in: header
+   required: true
+   type: string
+  acceptEncodingParam:
+   name: Accept-Encoding
+   in: header
+   required: false
+   type: string
+  xRequestIdParam:
+   name: X-Request-Id
+   in: header
+   required: true
+   type: string
+  cookieParam:
+   name: Cookie
+   in: header
+   required: true
+   type: string
+  sessionId:
+   name: SessionId
+   in: header
+   required: true
+   type: string
+  apiKey:
+   name: SessionId
+   in: header
+   required: true
+   type: string
+definitions:         
+  UpdateWalletRequest:
+     properties:
+       userName:
+         type: string
+         description: Unique id for user identification
+       currency:
+         type: string
+         x-annotations:
+           annotation-1: Length(max =3, message = "{INVALID_CURRENCY}")
+         description: |
+            Supported values - USD, GBP, EUR, INR, CAD, AUD
+       autoConvert:
+         type: boolean
+       
+     required:
+        - userName 
+        - currency  
+  
+  WalletDetails:
+    properties:
+     userName:
+       type: string
+     currency:
+       type: string 
+     
+     
+  WalletResponse:
+    properties:
+     userName:
+       type: string
+     currencySymbol:
+       type: string
+     autoConvert:
+       type: string 
+     availableBalance:
+       type: string       
+     pendingBalance:
+       type: string
+     reserveBalance:
+       type: string
+     totalBalance:
+       type: string
+     createdDate:
+       type: string
+     modifiedDate:
+       type: string
+     walletStatus:
+       type: string
+       
+  WalletsResponse:
+    properties:
+      users:
+        type: array
+        items:
+          $ref: '#/definitions/WalletResponse'
+
+  AddBankAccountRequest:
+    properties:
+     userName:
+       type: string
+     accountNumber:
+       type: string
+     accountHolderName:
+       type: string 
+     ifscCode:
+       type: string
+       x-annotations:
+           annotation-1: Length(min=11, max =11, message = "{INVALID_IFSC_CODE}")
+  
+  UpdateBankAccountRequest:
+    properties:
+     userName:
+       type: string
+     accountNumber:
+       type: string
+     accountHolderName:
+       type: string 
+     ifscCode:
+       type: string
+       x-annotations:
+           annotation-1: Length(min=11, max =11, message = "{INVALID_IFSC_CODE}")
+       
+  DeleteBankAccountRequest:
+    properties:
+     userName:
+       type: string
+     accountNumber:
+       type: string    
+  
+  BankAccountResponse:
+    properties:
+     userName:
+       type: string
+     accountNumber:
+       type: string
+     accountHolderName:
+       type: string 
+     ifscCode:
+       type: string       
+     createdDate:
+       type: string
+     modifiedDate:
+       type: string
+     accountStatus:
+       type: string     
+
+  BankAccountsResponse:
+    properties:
+      bankDetails:
+        type: array
+        items:
+          $ref: '#/definitions/BankAccountResponse'
+
+       
+  RestError:
+    properties:
+      errorCode:
+        type: string
+      errorMessage:
+        type: string
+    required:
+      - errorCode
+      - errorMessage

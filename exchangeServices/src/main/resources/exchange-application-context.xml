@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="	
+	http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/jee
+    http://www.springframework.org/schema/jee/spring-jee.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/util
+    http://www.springframework.org/schema/util/spring-util.xsd
+    http://www.springframework.org/schema/task
+    http://www.springframework.org/schema/task/spring-task.xsd">
+	<context:annotation-config />
+
+	<context:component-scan base-package="com.exchange" />
+
+	<bean id="applicationDataRepository" class="com.exchangerpoint.exchangeservices.common.ApplicationDataRepository"
+		init-method="init" scope="singleton">
+		<property name="genericService" ref="genericService" />
+	</bean>
+	
+	<bean id="loginDAO" class="com.exchangerpoint.exchangeservices.dao.LoginDAOImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<bean id="homeDAO" class="com.exchangerpoint.exchangeservices.dao.HomeDAOImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="applicationDataRepository" ref="applicationDataRepository" />
+		<property name="genericService" ref="genericService" />
+	</bean>
+
+	<bean id="loginService" class="com.exchangerpoint.exchangeservices.service.LoginServiceImpl">
+		<property name="loginDAO" ref="loginDAO" />
+	</bean>
+	<bean id="homeService" class="com.exchangerpoint.exchangeservices.service.HomeServiceImpl">
+		<property name="homeDAO" ref="homeDAO" />
+	</bean>
+	
+	<bean id="mailService" class="com.exchangerpoint.exchangeservices.service.MailServiceImpl">
+		<property name="applicationDataRepository" ref="applicationDataRepository" />
+	</bean>
+	
+	<bean id="messagingService" class="com.exchangerpoint.exchangeservices.service.MessagingServiceImpl">
+		<property name="applicationDataRepository" ref="applicationDataRepository" />
+	</bean>
+	
+	<bean id="locationService" class="com.exchangerpoint.exchangeservices.service.LocationService">
+		<property name="applicationDataRepository" ref="applicationDataRepository" />
+	</bean>
+	
+	<bean id="validationService" class="com.exchangerpoint.exchangeservices.service.ValidationServiceImpl">
+		<property name="applicationDataRepository" ref="applicationDataRepository" />
+		<property name="genericService" ref="genericService" />
+	</bean>
+</beans>

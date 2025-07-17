@@ -1,0 +1,1015 @@
+swagger: '2.0'
+info:
+  description: ExchangerPoint Crypto Exchange Plateform - API endpoint Specification
+  version: "1.0.0"
+  title: "ExchangerPoint"
+  termsOfService: "http://exchangerpoint.com/terms/"
+  contact:
+    email: "support@exchangerpoint.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "exchangerpoint.com"
+basePath: "/api/v1"
+paths:
+  /users: 
+    get:
+      summary: Get list of user registered in ExchangerPoint platform.
+      description: Gets all registered user's in the system.
+      operationId: getUsers
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+      responses:
+        '200':
+          description: List of user's registered
+          schema:
+            $ref: '#/definitions/UsersResponse'
+        '400':
+          description: |
+            ** Error codes: **
+            * 1000 - Invalid login/expired session
+            * 1006 - User not logged in
+            * 1020 - Session timed out
+            * 2021 - User must be admin user
+            * 2029 - No user exist
+            * 4000 - Bad request
+            * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError'
+  /users/{userName}:
+    get:
+       tags:
+        - user
+       summary: Get the user from ExchangerPoint plateform.
+       description: Get registered user from system with given username.
+       operationId: getUser
+       produces:
+        - application/json
+       parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - name: userName
+          required: true
+          type: string
+          in: path
+          description: User's unique id 
+          
+       responses:
+        '200':
+          description: User object
+          schema:
+            $ref: '#/definitions/UserResponse'
+        '400':
+          description: |
+                ** Error codes: **
+                * 1000 - Invalid login/expired session
+                * 1006 - User not logged in
+                * 1020 - Session timed out
+                * 2001 - No username supplied
+                * 2002 - Supplied username does not exist
+                * 4000 - Bad request
+                * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError'
+    delete:
+       tags:
+         - user
+       summary: Delete the user from ExchangerPoint platform
+       description: Deletes the registerd user from the system with username.This will soft delete the user with changing user state to 'DELETED'
+       operationId: deleteUser
+       consumes:
+         - application/json
+       parameters:
+         - $ref: '#/parameters/acceptParam'
+         - $ref: '#/parameters/userAgentParam'
+         - $ref: '#/parameters/acceptEncodingParam'
+         - $ref: '#/parameters/cookieParam'
+         - $ref: '#/parameters/xRequestIdParam'
+         - name: userName
+           required: true
+           type: string
+           in: path
+           description: User's unique id 
+       responses:
+              '204':
+                description: No Content
+                headers:
+                  Location:
+                    type: string
+              '400':
+                description: |
+                  ** Error codes: **
+                  * 1000 - Invalid login/expired session
+                  * 1006 - User not logged in
+                  * 1020 - Session timed out
+                  * 2001 - No username supplied
+                  * 2002 - Supplied username does not exist
+                  * 4000 - Bad request
+                  * 5000 - Internal Server Error
+                schema:
+                  $ref: '#/definitions/RestError'
+              '500':
+                description: Server error
+                schema:
+                  $ref: '#/definitions/RestError'
+    
+  /users/create/:     
+    post:
+      tags:
+        - user
+      summary: Add the user in ExchangerPoint platform
+      description: Add the new user in the system.
+      operationId: addUser
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - in: body
+          name: addUserRequest
+          description: AddUserRequest - User details which need to be added.
+          required: true
+          schema:
+            $ref: '#/definitions/AddUserRequest'
+      responses:
+        '201':
+          description: Created
+          headers:
+            Location:
+              type: string
+        '400':
+          description: |
+            ** Error codes: **
+            * 1000 - Invalid login/expired session
+            * 1006 - User not logged in
+            * 1020 - Session timed out
+            * 2001 - No username supplied
+            * 2003 - Username already taken
+            * 2004 - Invalid username – unsupported characters
+            * 2005 - Invalid username – max length exceeded
+            * 2006 - Invalid username – min length required
+            * 2007 - No email id supplied 
+            * 2008 - Email id already registered
+            * 2009 - Invalid email id
+            * 2010 - No password supplied
+            * 2011 - Invalid password – unsupported characters
+            * 2012 - Invalid password – max length exceeded
+            * 2013 - Invalid password – min length required
+            * 4000 - Bad request
+            * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError'
+    
+              
+  /users/update/:  
+    put:
+      tags:
+        - user
+      summary: Update the user details in ExchangerPoint platform
+      description: Updates the registerd user with new details.
+      operationId: updateUser
+      consumes:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - in: body
+          name: updateUserRequest
+          description: UpdateUserRequest - User details which need to be updated.
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateUserRequest'
+      responses:
+        '204':
+          description: No Content
+          headers:
+            Location:
+              type: string
+        '400':
+          description: |
+            ** Error codes: **
+            * 1000 - Invalid login/expired session
+            * 1006 - User not logged in
+            * 1020 - Session timed out
+            * 2001 - No username supplied
+            * 2002 - Supplied username does not exist
+            * 2014 - Invalid name – unsupported characters
+            * 2015 - Invalid name – max length exceeded
+            * 2026 - Invalid pin – unsupported characters
+            * 2027 - Invalid pin – max length exceeded
+            * 2028 - Invalid pin – min length required
+            * 4003 - Access Denied
+            * 4000 - Bad request
+            * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError'      
+                      
+  /users/update/password:
+    put:
+       tags:
+        - user
+       summary: Update user password in the system.
+       description: Update user password in the system.
+       operationId: updatePassword
+       consumes:
+        - application/json
+       parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - in: body
+          name: updatePasswordRequest
+          description: Old and New password which need to be updated
+          required: true
+          schema:
+            $ref: '#/definitions/UpdatePasswordRequest'
+       responses:
+        '204':
+          description: No Content
+          headers:
+            Location:
+              type: string
+        '400':
+          description: |
+                ** Error codes: **
+                * 1000 - Invalid login/expired session
+                * 1006 - User not logged in
+                * 1020 - Session timed out
+                * 2001 - No username supplied
+                * 2002 - Supplied username does not exist
+                * 2016 - No old password supplied
+                * 2017 - Old password does not match
+                * 2018 - Invalid new password – unsupported characters
+                * 2019 - Invalid new password – max length exceeded
+                * 2020 - Invalid new password – min length required
+                * 2034 - No password supplied
+                * 2035 - New password matches with old password
+                * 4003 - Access Denied
+                * 4000 - Bad request
+                * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError'
+            
+  /users/update/pin:
+    put:
+       tags:
+        - user
+       summary: Update user pin in the system.
+       description: Update user pin in the system.
+       operationId: updatePin
+       consumes:
+        - application/json
+       parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - in: body
+          name: updatePinRequest
+          description: Old and New pin which need to be updated
+          required: true
+          schema:
+            $ref: '#/definitions/UpdatePinRequest'
+       responses:
+        '204':
+          description: No Content
+          headers:
+            Location:
+              type: string
+        '400':
+          description: |
+                ** Error codes: **
+                * 1000 - Invalid login/expired session
+                * 1006 - User not logged in
+                * 1020 - Session timed out
+                * 2001 - No username supplied
+                * 2002 - Supplied username does not exist
+                * 2021 - No phone updated
+                * 2023 - Invalid new pin – unsupported characters
+                * 2024 - Invalid new pin – max length exceeded
+                * 2025 - Invalid new pin – min length required
+                * 2037 - New pin matches with old pin
+                * 4003 - Access Denied
+                * 4000 - Bad request
+                * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError' 
+  /users/update/email:
+    put:
+       tags:
+        - user
+       summary: Update user email in the system.
+       description: Update user email in the system.
+       operationId: updateEmail
+       consumes:
+        - application/json
+       parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - in: body
+          name: updateEmailRequest
+          description: New email which need to be updated
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateEmailRequest'
+       responses:
+        '204':
+          description: No Content
+          headers:
+            Location:
+              type: string
+        '400':
+          description: |
+                ** Error codes: **
+                * 1000 - Invalid login/expired session
+                * 1006 - User not logged in
+                * 1020 - Session timed out
+                * 2001 - No username supplied
+                * 2002 - Supplied username does not exist
+                * 2007 - No email id supplied 
+                * 2008 - Email id already registered
+                * 2009 - Invalid email id
+                * 2039 - pin does not match
+                * 4003 - Access Denied
+                * 4000 - Bad request
+                * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError'
+  /users/update/phone:
+    put:
+       tags:
+        - user
+       summary: Update user phone in the system.
+       description: Update user phone in the system.
+       operationId: updatePhone
+       consumes:
+        - application/json
+       parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - in: body
+          name: updatePhoneRequest
+          description: New phone which need to be updated
+          required: true
+          schema:
+            $ref: '#/definitions/UpdatePhoneRequest'
+       responses:
+        '204':
+          description: No Content
+          headers:
+            Location:
+              type: string
+        '400':
+          description: |
+                ** Error codes: **
+                * 1000 - Invalid login/expired session
+                * 1006 - User not logged in
+                * 1020 - Session timed out
+                * 2001 - No username supplied
+                * 2002 - Supplied username does not exist
+                * 2030 - No phone number supplied 
+                * 2031 - Phone number already registered
+                * 2032 - Invalid phone number
+                * 2036 - Invalid phone verification code
+                * 2039 - pin does not match
+                * 4003 - Access Denied
+                * 4000 - Bad request
+                * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError' 
+  /users/reset/password:
+    put:
+       tags:
+        - user
+       summary: reset user password in the system.
+       description: reset user password in the system.
+       operationId: resetPassword
+       consumes:
+        - application/json
+       parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        
+        - in: body
+          name: resetPasswordRequest
+          description: Email id and New password which need to be updated
+          required: true
+          schema:
+            $ref: '#/definitions/ResetPasswordRequest'
+       responses:
+        '204':
+          description: No Content
+          headers:
+            Location:
+              type: string
+        '400':
+          description: |
+                ** Error codes: **
+                * 2007 - No email id supplied
+                * 2029 - No user exist
+                * 4003 - Access Denied
+                * 4000 - Bad request
+                * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError'  
+            
+  /users/verify/password:
+    put:
+       tags:
+        - user
+       summary: Update user password in the system.
+       description: Update user password in the system.
+       operationId: verifyPassword
+       consumes:
+        - application/json
+       parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - in: body
+          name: verifyPasswordRequest
+          description: Old and New password which need to be updated
+          required: true
+          schema:
+            $ref: '#/definitions/ResetPasswordRequest'
+       responses:
+        '204':
+          description: No Content
+          headers:
+            Location:
+              type: string
+        '400':
+          description: |
+                ** Error codes: **
+                * 1000 - Invalid login/expired session
+                * 1006 - User not logged in
+                * 1020 - Session timed out
+                * 2029 - No user exist
+                * 2018 - Invalid new password – unsupported characters
+                * 2019 - Invalid new password – max length exceeded
+                * 2020 - Invalid new password – min length required
+                * 2034 - No password supplied
+                * 2036 - Invalid verification code
+                * 4003 - Access Denied
+                * 4000 - Bad request
+                * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError'          
+  /users/verify/pin:
+    put:
+       tags:
+        - user
+       summary: verify user pin in the system.
+       description: verify user pin in the system.
+       operationId: verifyPin
+       consumes:
+        - application/json
+       parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - in: body
+          name: verifyPinRequest
+          description: New pin and verification code which need to be updated
+          required: true
+          schema:
+            $ref: '#/definitions/UpdatePinRequest'
+       responses:
+        '204':
+          description: No Content
+          headers:
+            Location:
+              type: string
+        '400':
+          description: |
+                ** Error codes: **
+                * 1000 - Invalid login/expired session
+                * 1006 - User not logged in
+                * 1020 - Session timed out
+                * 2001 - No username supplied
+                * 2002 - Supplied username does not exist
+                * 2036 - Invalid verification code
+                * 4003 - Access Denied
+                * 4000 - Bad request
+                * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError' 
+  /users/verify/email:
+    put:
+       tags:
+        - user
+       summary: verify user email in the system.
+       description: verify user email in the system.
+       operationId: verifyEmail
+       consumes:
+        - application/json
+       parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - in: body
+          name: verifyEmailRequest
+          description: New email and verification code which need to be updated
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateEmailRequest'
+       responses:
+        '204':
+          description: No Content
+          headers:
+            Location:
+              type: string
+        '400':
+          description: |
+                ** Error codes: **
+                * 1000 - Invalid login/expired session
+                * 1006 - User not logged in
+                * 1020 - Session timed out
+                * 2001 - No username supplied
+                * 2002 - Supplied username does not exist
+                * 2036 - Invalid verification code
+                * 2039 - pin does not match
+                * 4003 - Access Denied
+                * 4000 - Bad request
+                * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError'
+  /users/verify/phone:
+    put:
+       tags:
+        - user
+       summary: verify user phone in the system.
+       description: verify user phone in the system.
+       operationId: verifyPhone
+       consumes:
+        - application/json
+       parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - in: body
+          name: verifyPhoneRequest
+          description: New phone and verification code 
+          required: true
+          schema:
+            $ref: '#/definitions/UpdatePhoneRequest'
+       responses:
+        '204':
+          description: No Content
+          headers:
+            Location:
+              type: string
+        '400':
+          description: |
+                ** Error codes: **
+                * 1000 - Invalid login/expired session
+                * 1006 - User not logged in
+                * 1020 - Session timed out
+                * 2001 - No username supplied
+                * 2002 - Supplied username does not exist
+                * 2036 - Invalid verification code
+                * 2039 - pin does not match
+                * 4003 - Access Denied
+                * 4000 - Bad request
+                * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError' 
+  /users/verify/ip:
+    put:
+       tags:
+        - user
+       summary: verify user ip in the system.
+       description: verify user ip in the system.
+       operationId: verifyIp
+       consumes:
+        - application/json
+       parameters:
+        - $ref: '#/parameters/acceptParam'
+        - $ref: '#/parameters/userAgentParam'
+        - $ref: '#/parameters/acceptEncodingParam'
+        - $ref: '#/parameters/cookieParam'
+        - $ref: '#/parameters/xRequestIdParam'
+        - in: body
+          name: IpVerificationRequest
+          description: New ip and verification code 
+          required: true
+          schema:
+            $ref: '#/definitions/IpVerificationRequest'
+       responses:
+        '204':
+          description: No Content
+          headers:
+            Location:
+              type: string
+        '400':
+          description: |
+                ** Error codes: **
+                * 2001 - No username supplied
+                * 2002 - Supplied username does not exist
+                * 2036 - Invalid verification code
+                * 4003 - Access Denied
+                * 4000 - Bad request
+                * 5000 - Internal Server Error
+          schema:
+            $ref: '#/definitions/RestError'
+        '500':
+          description: Server error
+          schema:
+            $ref: '#/definitions/RestError'        
+parameters:
+  acceptParam:
+   name: Accept
+   in: header
+   required: true
+   type: string
+  userAgentParam:
+   name: User-Agent
+   in: header
+   required: true
+   type: string
+  acceptEncodingParam:
+   name: Accept-Encoding
+   in: header
+   required: false
+   type: string
+  xRequestIdParam:
+   name: X-Request-Id
+   in: header
+   required: true
+   type: string
+  cookieParam:
+   name: Cookie
+   in: header
+   required: true
+   type: string
+  sessionId:
+   name: SessionId
+   in: header
+   required: true
+   type: string
+  apiKey:
+   name: SessionId
+   in: header
+   required: true
+   type: string
+definitions:
+  AddUserRequest:
+     properties:
+       userName:
+         type: string
+         description: Unique id for user identification
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_USER_NAME}")
+           annotation-3: Length(min = 3, max =25, message = "{INVALID_USER_NAME}")
+       email:
+         type: string
+         description: User new email
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_EMAIL}")
+           annotation-3: Length(min = 5, max =100, message = "{INVALID_EMAIL}")
+       password:
+         type: string
+         description: User profile password
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_PASSWORD}")
+           annotation-3: Length(min = 8, max =25, message = "{INVALID_PASSWORD}")   
+     required:
+        - userName 
+        - email
+        - password
+           
+  UpdateUserRequest:
+     properties:
+       userName:
+         type: string
+         description: Unique id for user identification
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_USER_NAME}")
+           annotation-3: Length(min = 3, max =25, message = "{INVALID_USER_NAME}")
+       name:
+         type: string
+         x-annotations:
+           annotation-1: Length(max =100, message = "{INVALID_NAME}")
+         description: |
+            Account owner name
+       currency:
+         type: string
+         x-annotations:
+           annotation-1: Length(max =3, message = "{INVALID_CURRENCY}")
+         description: |
+            Supported values - USD, GBP, EUR, INR, CAD, AUD
+       country:
+         type: string
+         x-annotations:
+           annotation-1: Length(max =50, message = "{INVALID_COUNTRY}")
+       pin:
+         type: string
+         x-annotations:
+           annotation-1: Length(max =4, message = "{INVALID_PIN}")
+     required:
+        - userName    
+  
+  UpdatePasswordRequest:
+     properties:
+       userName:
+         type: string
+         description: Unique id for user identification
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_USER_NAME}")
+           annotation-3: Length(min = 3, max =25, message = "{INVALID_USER_NAME}")           
+       oldPassword:
+         type: string
+         description: User old password
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_OLD_PASSWORD}")
+       newPassword:
+         type: string
+         description: User new password
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_NEW_PASSWORD}")
+           annotation-3: Length(min = 8, max =25, message = "{INVALID_USER_NAME}") 
+           
+     required:
+        - userName 
+        - oldPassword
+        - newPassword
+  ResetPasswordRequest:
+     properties:
+       email:
+         type: string
+         description: Unique id for user identification
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_EMAIL}")
+           annotation-3: Length(min = 5, max =100, message = "{INVALID_EMAIL}")
+       newPassword:
+         type: string
+         description: User new password
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_NEW_PASSWORD}")
+           annotation-3: Length(min = 8, max =25, message = "{INVALID_USER_NAME}") 
+       verificationCode:
+         type: string
+         description: User new password
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_VERIFICATION_CODE}")
+               
+     required:
+        - email 
+        - newPassword
+        - verificationCode         
+  UpdateEmailRequest:
+     properties:
+       userName:
+         type: string
+         description: Unique id for user identification
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_USER_NAME}")
+           annotation-3: Length(min = 3, max =25, message = "{INVALID_USER_NAME}")            
+       email:
+         type: string
+         description: User new email
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_EMAIL}")
+           annotation-3: Length(min = 5, max =100, message = "{INVALID_EMAIL}")
+       verificationCode:
+         type: string
+         description: User new password
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_VERIFICATION_CODE}")  
+       pin:
+         type: string
+         description: User pin
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_PIN}")          
+     required:
+        - userName 
+        - email
+        - verificationCode
+        
+  UpdatePhoneRequest:
+     properties:
+       userName:
+         type: string
+         description: Unique id for user identification
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_USER_NAME}")
+           annotation-3: Length(min = 3, max =25, message = "{INVALID_USER_NAME}")            
+       phone:
+         type: string
+         description: User new phone
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_PHONE}")
+           annotation-3: Length(min = 8, max =20, message = "{INVALID_PHONE}")
+       verificationCode:
+         type: string
+         description: User new password
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_VERIFICATION_CODE}") 
+       pin:
+         type: string
+         description: User pin
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_PIN}")        
+     required:
+        - userName 
+        - phone
+        - verificationCode
+           
+  UpdatePinRequest:
+     properties:
+       userName:
+         type: string
+         description: Unique id for user identification
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_USER_NAME}")
+           annotation-3: Length(min = 3, max =25, message = "{INVALID_USER_NAME}")                     
+       newPin:
+         type: string
+         description: User new pin
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_NEW_PIN}"
+           annotation-3: Length(min =4, max =4, message = "{INVALID_NEW_PIN}") 
+       verificationCode:
+         type: string
+         description: User new password
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_VERIFICATION_CODE}")     
+     required:
+        - userName
+        - newPin
+        - verificationCode
+  IpVerificationRequest:
+     properties:
+       userName:
+         type: string
+         description: Unique id for user identification
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_USER_NAME}")
+           annotation-3: Length(min = 3, max =25, message = "{INVALID_USER_NAME}")            
+       
+       verificationCode:
+         type: string
+         description: User new password
+         x-annotations:
+           annotation-1: NotNull(message = "{7004}")
+           annotation-2: NotBlank(message = "{INVALID_VERIFICATION_CODE}") 
+             
+     required:
+        - userName
+        - verificationCode      
+     
+  UserResponse:
+    properties:
+     userName:
+       type: string
+     name:
+       type: string
+     email:
+       type: string
+     phone:
+       type: string
+     country:
+       type: string
+     lastLoginIp:
+       type: string
+     lastLoginTime:
+       type: string
+     failedLoginAttempts:
+       type: string
+     comment:
+       type: string
+     role:
+       type: string
+     createdDate:
+       type: string
+     modifiedDate:
+       type: string
+     accountStatus:
+       type: string
+       
+  UsersResponse:
+    properties:
+      users:
+        type: array
+        items:
+          $ref: '#/definitions/UserResponse'
+          
+       
+  RestError:
+    properties:
+      errorCode:
+        type: string
+      errorMessage:
+        type: string
+    required:
+      - errorCode
+      - errorMessage
