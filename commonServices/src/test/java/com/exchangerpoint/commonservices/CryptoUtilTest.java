@@ -88,13 +88,13 @@ public class CryptoUtilTest {
 		
 		AdminParam ap5 = new AdminParam();
 		ap5.setName("twilioaccountsid");
-		ap5.setValue(CryptoUtil.encrypt(key1, key2, "ACa696020ae9ced8b799531a7fb0050cc9"));
+		ap5.setValue(CryptoUtil.encrypt(key1, key2, "xxx"));
 		ap5.setParamStatus("ACTIVE");
 		ap5.setEncription("true");
 		
 		AdminParam ap6 = new AdminParam();
 		ap6.setName("twilioauthtoken");
-		ap6.setValue(CryptoUtil.encrypt(key1, key2, "0a48d8f414e36e5eef2c0df31a921c90"));
+		ap6.setValue(CryptoUtil.encrypt(key1, key2, "xxx"));
 		ap6.setParamStatus("ACTIVE");
 		ap6.setEncription("true");
 		
@@ -143,12 +143,12 @@ public class CryptoUtilTest {
 		Assert.assertTrue("decryptedMailServiceAuthPassword decryption failed.", decryptedMailServiceAuthPassword.equals("AoV12Pt2pZjfPQr47MBmWGoZQ68yGAGnGuiUubC2Vq+O"));
 		
 		String decryptedtwilioaccountsid = CryptoUtil.decrypt(key1, key2, applicationDataRepository.adminParamMap.get("twilioaccountsid"));
-		System.out.println("decryptedtwilioaccountsid decryption: Both equal ? " + decryptedtwilioaccountsid.equals("ACa696020ae9ced8b799531a7fb0050cc9"));
-		Assert.assertTrue("decryptedtwilioaccountsid decryption failed.", decryptedtwilioaccountsid.equals("ACa696020ae9ced8b799531a7fb0050cc9"));
+		System.out.println("decryptedtwilioaccountsid decryption: Both equal ? " + decryptedtwilioaccountsid.equals("xxx"));
+		Assert.assertTrue("decryptedtwilioaccountsid decryption failed.", decryptedtwilioaccountsid.equals("xxx"));
 		
 		String decryptedtwilioauthtoken = CryptoUtil.decrypt(key1, key2, applicationDataRepository.adminParamMap.get("twilioauthtoken"));
-		System.out.println("decryptedtwilioauthtoken decryption: Both equal ? " + decryptedtwilioauthtoken.equals("0a48d8f414e36e5eef2c0df31a921c90"));
-		assertThat("decryptedtwilioauthtoken decryption: Both equal ? ", decryptedtwilioauthtoken, is("0a48d8f414e36e5eef2c0df31a921c90"));
+		System.out.println("decryptedtwilioauthtoken decryption: Both equal ? " + decryptedtwilioauthtoken.equals("xxx"));
+		assertThat("decryptedtwilioauthtoken decryption: Both equal ? ", decryptedtwilioauthtoken, is("xxx"));
 	
 	}
 	
